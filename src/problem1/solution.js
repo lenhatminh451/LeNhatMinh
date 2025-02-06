@@ -41,6 +41,19 @@ var sum_to_n_b = function(n) {
     return n + sum_to_n_b(n - 1);
 };
 
+/**
+ * Calculates the sum of numbers from 1 to n using the arithmetic sum formula.
+ * The formula is: sum = (n * (n + 1)) / 2
+ *
+ * @param {number} n - The number up to which summation is performed.
+ * @returns {number} - The summation of integers from 1 to n.
+ */
 var sum_to_n_c = function(n) {
-    // your code here
+    // Handle negative or zero input
+    if (n < 1) { 
+        return 0;
+    }
+    
+    // Use the arithmetic formula
+    return (n * (n + 1)) / 2;
 };
