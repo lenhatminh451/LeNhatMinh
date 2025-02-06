@@ -21,8 +21,24 @@ var sum_to_n_a = function(n) {
     return sum;     // Return the final sum
 };
 
+/**
+ * Recursively calculates the sum of numbers from 1 to n.
+ * Uses recursion by adding `n` to the sum of `n-1` until it reaches 0.
+ *
+ * ### Limitations:
+ *  - Stack Overflow Risk: Calling this function with a very large `n` (e.g., `sum_to_n_b(100000)`) may cause a stack overflow.
+ * 
+ * @param {number} n - The number up to which summation is performed.
+ * @returns {number} - The summation of integers from 1 to n.
+ */
 var sum_to_n_b = function(n) {
-    // your code here
+    // Base case: If n is 0 or negative, return 0
+    if (n < 1) {
+        return 0;
+    }
+
+    // Recursive step: n + sum of (n-1)
+    return n + sum_to_n_b(n - 1);
 };
 
 var sum_to_n_c = function(n) {
