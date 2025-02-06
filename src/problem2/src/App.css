@@ -17,6 +17,10 @@ form-container {
     text-align: center;
 }
 
+.error-message {
+    color: red;
+}
+
 input, select {
     width: 100%;
     padding: 10px;
