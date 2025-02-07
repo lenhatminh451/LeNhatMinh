@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import useExchangeRates from "../hooks/useExchangeRates";
 import TokenSelect from "./TokenSelect";
 
+// Helper function to format numbers with commas
+const formatNumberWithCommas = (value: number) => {
+    return value.toLocaleString(undefined, { maximumFractionDigits: 4 });
+};
+
 const SwapCurrencyForm = () => {
     // State for form inputs
     const [fromCurrency, setFromCurrency] = useState<string>("ETH");
     const [toCurrency, setToCurrency] = useState<string>("BLUR");
     const [amount, setAmount] = useState<string>("");
-    const [convertedAmount, setConvertedAmount] = useState<number>(0);
+    const [convertedAmount, setConvertedAmount] = useState<string>("");
 
     // Fetch real-time exchange rates
     const { prices, loading, error } = useExchangeRates();
@@ -15,18 +20,30 @@ const SwapCurrencyForm = () => {
 
     // Function to calculate and update converted amount
     const updateConvertedAmount = () => {
-        if (!prices[fromCurrency] || !prices[toCurrency])
+        // Remove commas before conversion
+        const numericAmount = parseFloat(amount.replace(/,/g, "")); 
+
+        if (isNaN(numericAmount) || !prices[fromCurrency] || !prices[toCurrency]) {
+            setConvertedAmount(""); // Clear formatted amount when invalid
             return;
+        }
         
         const fromPrice = prices[fromCurrency];
         const toPrice = prices[toCurrency];
 
-        const numericAmount = parseFloat(amount) || 0;  // Convert amount from string to number
-        setConvertedAmount((numericAmount * fromPrice) / toPrice);
+        const calculatedAmount = (numericAmount * fromPrice) / toPrice;
+        setConvertedAmount(formatNumberWithCommas(calculatedAmount));
     }
 
     // Effect to update convertedAmount when `amount` or `toCurrency` changes
     useEffect(() => {
+         // Not recalculate if currencies are the same
+         if (fromCurrency === toCurrency) {
+            setConvertedAmount(formatNumberWithCommas(parseFloat(amount.replace(/,/g, "")) || 0));
+            return;
+        }
+
+        // Recalculate
         updateConvertedAmount();
     }, [amount, fromCurrency, toCurrency, prices]);
 
@@ -49,10 +66,15 @@ const SwapCurrencyForm = () => {
                 <label htmlFor="amount">Amount to Send:</label>
                 <input
                     id="amount"
-                    type="number"
+                    type="text"
                     placeholder="Enter amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={formatNumberWithCommas(parseFloat(amount) || 0)}
+                    onChange={(e) => {
+                        const rawValue = e.target.value.replace(/,/g, ""); // Remove commas on input
+                        if (!isNaN(Number(rawValue)) || rawValue === "") {
+                            setAmount(rawValue);
+                        }
+                    }}
                 />
 
                 {/* 'To' Currency Selection */}
@@ -67,9 +89,9 @@ const SwapCurrencyForm = () => {
                 <label htmlFor="converted-amount">Amount to Receive:</label>
                 <input
                     id="converted-amount"
-                    type="number"
+                    type="text"
                     className="read-only-input"
-                    value={convertedAmount.toFixed(4)}
+                    value={convertedAmount}
                     readOnly
                 />
             </form>
