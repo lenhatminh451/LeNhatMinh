@@ -31,8 +31,11 @@ const TokenSelect = ({ tokens, selectedToken, onChange }: TokenSelectProps) => {
     return (
         <div className="custom-dropdown">
             <div className="dropdown-header" onClick={() => setIsOpen(!isOpen)}>
-                <img src={getTokenIcon(selectedToken)} alt={selectedToken} className="token-icon"/>
-                {selectedToken}
+                <div className="dropdown-left">
+                    <img src={getTokenIcon(selectedToken)} alt={selectedToken} className="token-icon"/>
+                    {selectedToken}
+                </div>
+                <span className="dropdown-icon">▼</span>
             </div>
 
             {isOpen && (

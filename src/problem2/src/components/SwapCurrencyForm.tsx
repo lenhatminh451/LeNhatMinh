@@ -68,6 +68,7 @@ const SwapCurrencyForm = () => {
                 <input
                     id="converted-amount"
                     type="number"
+                    className="read-only-input"
                     value={convertedAmount.toFixed(4)}
                     readOnly
                 />
