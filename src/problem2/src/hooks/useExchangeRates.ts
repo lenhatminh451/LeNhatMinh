@@ -4,7 +4,7 @@ interface TokenPrices {
     [symbol: string]: number;
 }
 
-const useExchangeRate = () => {
+const useExchangeRates = () => {
     const [prices, setPrices] = useState<TokenPrices>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -39,4 +39,4 @@ const useExchangeRate = () => {
     return { prices, loading, error };
 };
 
-export default useExchangeRate;
+export default useExchangeRates;

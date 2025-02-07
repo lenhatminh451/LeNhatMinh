@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useExchangeRate from "../hooks/useExchangeRates";
+import useExchangeRates from "../hooks/useExchangeRates";
 import TokenSelect from "./TokenSelect";
 
 const SwapCurrencyForm = () => {
@@ -10,7 +10,7 @@ const SwapCurrencyForm = () => {
     const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
     // Fetch real-time exchange rates
-    const { prices, loading, error } = useExchangeRate();
+    const { prices, loading, error } = useExchangeRates();
     const tokenList = Object.keys(prices);
 
     // Function to calculate and update converted amount
