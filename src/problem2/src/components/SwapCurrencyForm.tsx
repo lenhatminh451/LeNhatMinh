@@ -9,14 +9,22 @@ const formatNumberWithCommas = (value: number) => {
 
 const SwapCurrencyForm = () => {
     // State for form inputs
-    const [fromCurrency, setFromCurrency] = useState<string>("ETH");
-    const [toCurrency, setToCurrency] = useState<string>("BLUR");
+    const [fromCurrency, setFromCurrency] = useState<string>("");
+    const [toCurrency, setToCurrency] = useState<string>("");
     const [amount, setAmount] = useState<string>("");
     const [convertedAmount, setConvertedAmount] = useState<string>("");
 
     // Fetch real-time exchange rates
     const { prices, loading, error } = useExchangeRates();
     const tokenList = Object.keys(prices);
+
+    // Set default currency when prices are loaded
+    useEffect(() => {
+        if (tokenList.length > 0 && !fromCurrency && !toCurrency) {
+            setFromCurrency(tokenList[0]);
+            setToCurrency(tokenList[0]);
+        }
+    }, [tokenList]);
 
     // Function to calculate and update converted amount
     const updateConvertedAmount = () => {
