@@ -21,7 +21,7 @@ form-container {
     color: red;
 }
 
-input, select {
+input {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
@@ -30,4 +30,63 @@ input, select {
     box-sizing: border-box; /* Ensures padding doesn’t change width */
     background-color: white;
     color: black;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.dropdown-header img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.dropdown-list {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-left: 0;
+}
+
+.dropdown-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.dropdown-list li:hover {
+    background-color: #f1f1f1;
+}
+
+.token-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+/* Ignore browser default styles */
+ul, li {
+    margin: 0;
+    padding: 0;
 }

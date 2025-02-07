@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import useExchangeRate from "../hooks/useExchangeRates";
+import TokenSelect from "./TokenSelect";
 
 const SwapCurrencyForm = () => {
     // State for form inputs
@@ -10,10 +11,10 @@ const SwapCurrencyForm = () => {
 
     // Fetch real-time exchange rates
     const { prices, loading, error } = useExchangeRate();
+    const tokenList = Object.keys(prices);
 
     // Function to calculate and update converted amount
     const updateConvertedAmount = () => {
-        console.log(prices);
         if (!prices[fromCurrency] || !prices[toCurrency])
             return;
         
@@ -38,15 +39,11 @@ const SwapCurrencyForm = () => {
             <form>
                 {/* 'From' Currency Selection */}
                 <label htmlFor="from-currency">From:</label>
-                <select
-                    id="from-currency"
-                    value={fromCurrency}
-                    onChange={(e) => setFromCurrency(e.target.value)}
-                >
-                    {Object.keys(prices).map(token => (
-                        <option key={token} value={token}>{token}</option>
-                    ))}
-                </select>
+                <TokenSelect
+                    tokens={tokenList}
+                    selectedToken={fromCurrency}
+                    onChange={setFromCurrency}
+                />
 
                 {/* Amount Input */}
                 <label htmlFor="amount">Amount to Send:</label>
@@ -60,15 +57,11 @@ const SwapCurrencyForm = () => {
 
                 {/* 'To' Currency Selection */}
                 <label htmlFor="to-currency">To:</label>
-                <select
-                    id="to-currency"
-                    value={toCurrency}
-                    onChange={(e) => setToCurrency(e.target.value)}
-                >
-                    {Object.keys(prices).map(token => (
-                        <option key={token} value={token}>{token}</option>
-                    ))}
-                </select> 
+                <TokenSelect
+                    tokens={tokenList}
+                    selectedToken={toCurrency}
+                    onChange={setToCurrency}
+                />
 
                 {/* Amount to Receive */}
                 <label htmlFor="converted-amount">Amount to Receive:</label>
