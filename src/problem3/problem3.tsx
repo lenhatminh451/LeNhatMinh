@@ -1,6 +1,12 @@
-interface WalletBalance {
+import React, { useMemo } from 'react';
+import WalletRow from './components/WalletRow';
+import { useWalletBalances, usePrices } from './hooks/customHooks';
+import classes from './styles/style.module.css';
+
+export interface WalletBalance {
     currency: string;
     amount: number;
+    blockchain: string;
 }
 
 interface FormattedWalletBalance {
@@ -9,8 +15,14 @@ interface FormattedWalletBalance {
     formatted: string;
 }
 
-interface Props extends BoxProps {
+interface BoxProps {
+    className?: string;
+    style?: React.CSSProperties;
+    [key: string]: any;
+}
 
+interface Props extends BoxProps {
+    children?: React.ReactNode;
 }
 
 const WalletPage: React.FC<Props> = (props: Props) => {
@@ -39,9 +51,8 @@ const WalletPage: React.FC<Props> = (props: Props) => {
         return balances.filter((balance: WalletBalance) => {
             const balancePriority = getPriority(balance.blockchain);
 
-            if (lhsPriority > -99) {
-                if (balance.amount <= 0)
-                {
+            if (balancePriority > -99) {
+                if (balance.amount <= 0) {
                     return true;
                 }
             }
@@ -56,8 +67,11 @@ const WalletPage: React.FC<Props> = (props: Props) => {
             } else if (rightPriority > leftPriority) {
                 return 1;
             }
+
+            // If priorities are equal, keep the original order
+            return 0;
         });
-    }, [balances, prices]);
+    }, [balances]);
 
     const formattedBalances = sortedBalances.map((balance: WalletBalance) => {
         return {
@@ -66,13 +80,13 @@ const WalletPage: React.FC<Props> = (props: Props) => {
         }
     })
 
-    const rows = sortedBalances.map((balance: FormattedWalletBalance, index: number) => {
+    const rows = formattedBalances.map((balance: FormattedWalletBalance) => {
         const usdValue = prices[balance.currency] * balance.amount;
 
         return (
             <WalletRow
                 className={classes.row}
-                key={index}
+                key={balance.currency}
                 amount={balance.amount}
                 usdValue={usdValue}
                 formattedAmount={balance.formatted}
