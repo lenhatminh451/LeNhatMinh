@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 
+interface TokenPrice {
+    currency: string;
+    date: string;
+    price: number;
+}
+
 interface TokenPrices {
     [symbol: string]: number;
 }
@@ -17,13 +23,23 @@ const useExchangeRates = () => {
                     throw new Error("Failed to fetch token prices");
                 }
 
-                const data = await response.json();
-                const priceMap: TokenPrices = {};
+                const data: TokenPrice[] = await response.json();
+                const latestPrices: Record<string, TokenPrice> = {};
 
-                // Convert price list into a key-value object
-                data.forEach((token: { currency: string; price: number }) => {
-                    priceMap[token.currency] = token.price;
+                // Keep the latest price based on the date field
+                data.forEach((token) => {
+                    if (
+                        !latestPrices[token.currency] || 
+                        new Date(token.date) > new Date(latestPrices[token.currency].date)
+                    ) {
+                        latestPrices[token.currency] = token;
+                    }
                 });
+
+                // Convert filtered data into a map of { currency: price }
+                const priceMap: TokenPrices = Object.fromEntries(
+                    Object.entries(latestPrices).map(([symbol, token]) => [symbol, token.price])
+                );
 
                 setPrices(priceMap);
             } catch (err) {
